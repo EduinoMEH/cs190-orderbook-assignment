@@ -21,6 +21,7 @@ The interface (in full):
 | `getAsksCount()` | number of resting asks |
 | `getBaseToken()` | base ERC20 address |
 | `getQuoteToken()` | quote ERC20 address |
+| `getMidPrice()` | `(bestBid + bestAsk) / 2`; reverts if either side is empty |
 
 Read the unit conventions and side semantics at the top of `IOrderbook.sol`
 carefully — `price` is **quote wei per one whole base token**, and `amount`
@@ -49,6 +50,18 @@ forge test -vv
 and an ask, then runs a market order against each side. It **fails** against
 the shipped stub — making it pass is your minimum bar.
 
+## Wallet
+
+The Makefile manages a local deploy wallet stored in `.wallet` (gitignored).
+
+```sh
+make create-wallet        # generate a fresh keypair (refuses to overwrite)
+make get-wallet-address   # print the 0x address
+make get-private-key      # print the private key (used by forge --private-key)
+```
+
+Fund the address with Sepolia ETH from any public faucet before deploying.
+
 ## Deploy to Sepolia
 
 The bundled deploy script ships two `MockERC20`s (`Mock1`, `Mock2`) and an
@@ -57,7 +70,7 @@ The bundled deploy script ships two `MockERC20`s (`Mock1`, `Mock2`) and an
 ```sh
 forge script script/Orderbook.s.sol \
   --rpc-url $SEPOLIA_RPC_URL \
-  --private-key $PRIVATE_KEY \
+  --private-key $(make -s get-private-key) \
   --broadcast
 ```
 
@@ -70,7 +83,7 @@ If you want to redeploy a single mock token standalone:
 TOKEN_NAME=Mock1 TOKEN_SYMBOL=M1 \
 forge script script/MockERC20.s.sol \
   --rpc-url $SEPOLIA_RPC_URL \
-  --private-key $PRIVATE_KEY \
+  --private-key $(make -s get-private-key) \
   --broadcast
 ```
 
