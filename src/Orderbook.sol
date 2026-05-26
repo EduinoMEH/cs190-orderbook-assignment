@@ -82,4 +82,8 @@ contract Orderbook is IOrderbook {
     function getAsksCount() external view returns (uint256) {
         revert("NotImplemented");
     }
+
+    function getMidPrice() external view returns (uint256) {
+        revert("NotImplemented");
+    }
 }

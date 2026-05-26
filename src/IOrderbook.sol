@@ -61,4 +61,10 @@ interface IOrderbook {
 
     /// @notice Address of the quote-token ERC20 the orderbook prices in.
     function getQuoteToken() external view returns (address);
+
+    /// @notice Midprice of the book: `(bestBid + bestAsk) / 2`.
+    ///         Same unit as `price` (quote wei per one whole base token).
+    /// @dev    Reverts if either side of the book is empty — midprice is
+    ///         undefined without both a best bid and a best ask.
+    function getMidPrice() external view returns (uint256);
 }
